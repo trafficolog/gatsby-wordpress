@@ -1,0 +1,70 @@
+version: "4.17"
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - the_net
+
+  wordpress_docker:
+    depends_on:
+      - db
+    image: wordpress:latest
+    ports:
+      - "8000:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./wordpress/wp-content:/var/www/html/wp-content
+    networks:
+      - the_net
+
+  gatsby-ts:
+    depends_on:
+      - wordpress_docker
+    links: 
+      - wordpress_docker
+    working_dir: /app
+    container_name: gatsby
+    hostname: gatsby
+    build:
+      context: ./gatsby
+      dockerfile: Dockerfile.gatsby
+    command: gatsby develop -H 0.0.0.0 -p 3000
+    ports:
+      - "3000:3000"
+      - "3125:3125" #this is used by gatsby socket.io hot reload
+    volumes:
+      - ./gatsby-ts/:/app
+      - /app/node_modules
+    environment:
+      WORDPRESS_URL: http://wordpress_docker:80/graphql
+      NODE_ENV: development
+      INTERNAL_STATUS_PORT: 3125 #this is used by gatsby socket.io hot reload
+    expose:
+      - 3000
+      - 443
+      - 80
+      - 3125
+    tty: true
+    networks:
+      - the_net
+
+volumes:
+  db_data: {}
+  wordpress: {}
+
+networks:
+  the_net: {}
