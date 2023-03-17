@@ -2,7 +2,7 @@ import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `gatsby-ts`,
+    title: `gatsby`,
     siteUrl: `https://resheno.pro`
   },
   plugins: [
