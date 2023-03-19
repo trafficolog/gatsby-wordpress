@@ -60,14 +60,14 @@ services:
     container_name: resheno-gatsby
     hostname: resheno-gatsby
     build:
-      context: ./gatsby-resheno
+      context: ./resheno-gatsby
       dockerfile: Dockerfile.gatsby
     command: gatsby develop -H 0.0.0.0 -p 3000
     ports:
       - "3000:3000"
       - "3125:3125" #this is used by gatsby socket.io hot reload
     volumes:
-      - ./gatsby-resheno/:/app
+      - ./resheno-gatsby/:/app
       - /app/node_modules
     environment:
       WORDPRESS_URL: http://wordpress_docker/index.php?graphql
