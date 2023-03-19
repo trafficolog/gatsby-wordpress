@@ -13,7 +13,7 @@
   `sudo chattr +i /etc/resolv.conf`
 
 ## For local development run:
-  - cd gatsby-ts
+  - cd resheno-gatsby
   - npm install --verbose --network-timeout 100000
 
 ## Docker
