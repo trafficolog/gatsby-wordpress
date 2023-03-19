@@ -14,8 +14,7 @@
 
 ## For local development run:
   - cd gatsby-ts
-  - npm install --global yarn 
-  - yarn install --verbose --network-timeout 100000
+  - npm install --verbose --network-timeout 100000
 
 ## Docker
   - set to root folder
