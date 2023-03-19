@@ -3,6 +3,7 @@ version: "4.17"
 services:
   db:
     image: mysql:5.7
+    container_name: resheno_db
     volumes:
       - db_data:/var/lib/mysql
     restart: always
@@ -17,7 +18,10 @@ services:
   wordpress_docker:
     depends_on:
       - db
+    links:
+      - db
     image: wordpress:latest
+    container_name: resheno_wordpress
     ports:
       - "8000:80"
     restart: always
@@ -31,26 +35,42 @@ services:
     networks:
       - the_net
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: resheno_phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=wordpress
+      - PMA_PASSWORD=wordpress
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - /resheno
+    networks:
+      - the_net
+
   gatsby-ts:
     depends_on:
       - wordpress_docker
     links: 
       - wordpress_docker
     working_dir: /app
-    container_name: gatsby
-    hostname: gatsby
+    container_name: resheno-gatsby
+    hostname: resheno-gatsby
     build:
-      context: ./gatsby
+      context: ./resheno-gatsby
       dockerfile: Dockerfile.gatsby
     command: gatsby develop -H 0.0.0.0 -p 3000
     ports:
       - "3000:3000"
       - "3125:3125" #this is used by gatsby socket.io hot reload
     volumes:
-      - ./gatsby-ts/:/app
+      - ./resheno-gatsby/:/app
       - /app/node_modules
     environment:
-      WORDPRESS_URL: http://wordpress_docker:80/graphql
+      WORDPRESS_URL: http://wordpress_docker/index.php?graphql
       NODE_ENV: development
       INTERNAL_STATUS_PORT: 3125 #this is used by gatsby socket.io hot reload
     expose:

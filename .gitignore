@@ -1,3 +1,4 @@
-gatsby/node_modules/
-gatsby/.cache/
-gatsby/public
+gatsby-resheno/node_modules/
+gatsby-resheno/.cache/
+gatsby-resheno/public
+.vs

@@ -13,9 +13,8 @@
   `sudo chattr +i /etc/resolv.conf`
 
 ## For local development run:
-  - cd gatsby-ts
-  - npm install --global yarn 
-  - yarn install --verbose --network-timeout 100000
+  - cd resheno-gatsby
+  - npm install --verbose --network-timeout 100000
 
 ## Docker
   - set to root folder

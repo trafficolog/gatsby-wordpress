@@ -1,0 +1,19 @@
+FROM node:18 as builder
+
+RUN apt update -y && apt-get install autoconf
+
+RUN mkdir /app
+
+WORKDIR /app
+
+RUN npm install -g gatsby-cli
+
+COPY ./package*.json ./
+
+RUN npm install --verbose --network-timeout=100000
+
+COPY ./tsconfig.json ./
+
+COPY ./gatsby-config.ts ./
+
+EXPOSE 3333
